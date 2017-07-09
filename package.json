@@ -6,10 +6,12 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --config webpack.config.server.js --progress --hide-modules",
+    "serve": "firebase serve --only hosting,functions"
   },
   "dependencies": {
-    "vue": "^2.3.3"
+    "vue": "^2.3.3",
+    "vue-server-renderer": "^2.3.4"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -17,10 +19,15 @@
     "babel-preset-env": "^1.5.1",
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
+    "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.29.0",
     "vue-loader": "^12.1.0",
+    "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.4.5",
+    "webpack-merge": "^4.1.0",
+    "webpack-node-externals": "^1.6.0"
   }
 }

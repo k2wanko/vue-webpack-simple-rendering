@@ -1,10 +1,12 @@
 var path = require('path')
 var webpack = require('webpack')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/client.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, 'functions/public', './dist'),
     publicPath: '/dist/',
     filename: 'build.js'
   },
@@ -30,7 +32,16 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
+      {
+        test: /\.css$/,
+        use: process.env.NODE_ENV === 'production'
+          ? ExtractTextPlugin.extract({
+            use: 'css-loader?minimize',
+            fallback: 'vue-style-loader'
+          })
+          : ['vue-style-loader', 'css-loader']
+      },
     ]
   },
   resolve: {
@@ -45,7 +56,14 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.VUE_ENV': '"client"'
+    }),
+    new VueSSRClientPlugin(),
+  ],
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -65,6 +83,9 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    })
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].css?[hash]'
+    }),
   ])
 }
