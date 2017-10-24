@@ -19,5 +19,6 @@ npm run build
 npm install -g firebase-cli
 firebase use ${project_id}
 pushd functions && npm install && popd
+# require `npm run build`
 npm run serve
 ```
